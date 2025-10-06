@@ -305,6 +305,34 @@
       color: var(--dark);
       text-align: center;
     }
+
+    .url-input-container {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .url-input-container input {
+      width: 80%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .url-input-container button {
+      padding: 5px 10px;
+      font-size: 14px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .url-input-container button:hover {
+      background-color: var(--primary-dark);
+    }
     
     @media (max-width: 768px) {
       .upload-section {
@@ -359,6 +387,10 @@
         <div class="label">Cara 1</div>
       </div>
       <input type="file" id="imageUpload1" accept="image/*" class="file-input" />
+      <div class="url-input-container">
+        <input type="text" id="imageUrl1" placeholder="Pega la URL de una imagen..." />
+        <button onclick="loadImageFromUrl('imageUrl1', 'image1', 'box1')">Cargar desde URL</button>
+      </div>
     </div>
   </div>
 
@@ -376,6 +408,10 @@
         <div class="label">Cara 1</div>
       </div>
       <input type="file" id="imageUpload1_double" accept="image/*" class="file-input" />
+      <div class="url-input-container">
+        <input type="text" id="imageUrl1_double" placeholder="Pega la URL de la imagen frontal..." />
+        <button onclick="loadImageFromUrl('imageUrl1_double', 'image1_double', 'box1_double')">Cargar desde URL</button>
+      </div>
     </div>
     
     <div class="upload-container">
@@ -390,6 +426,10 @@
         <div class="label">Cara 2</div>
       </div>
       <input type="file" id="imageUpload2_double" accept="image/*" class="file-input" />
+      <div class="url-input-container">
+        <input type="text" id="imageUrl2_double" placeholder="Pega la URL de la imagen trasera..." />
+        <button onclick="loadImageFromUrl('imageUrl2_double', 'image2_double', 'box2_double')">Cargar desde URL</button>
+      </div>
     </div>
   </div>
 
@@ -531,6 +571,56 @@
     setupImageUpload('imageUpload1', 'image1', 'box1');
     setupImageUpload('imageUpload1_double', 'image1_double', 'box1_double');
     setupImageUpload('imageUpload2_double', 'image2_double', 'box2_double');
+
+    // --- Cargar imagen desde URL ---
+    function loadImageFromUrl(inputId, imageId, boxId) {
+      const urlInput = document.getElementById(inputId);
+      const imageUrl = urlInput.value.trim();
+      
+      if (!imageUrl) {
+        alert("Por favor, pega una URL válida.");
+        return;
+      }
+
+      if (!/^https?:\/\//i.test(imageUrl)) {
+        alert("La URL debe comenzar con http:// o https://");
+        return;
+      }
+
+      const image = document.getElementById(imageId);
+      const box = document.getElementById(boxId);
+      const placeholder = box.querySelector('.upload-placeholder');
+
+      placeholder.innerHTML = '<div style="text-align: center; color: var(--gray);"><i class="bi bi-hourglass-split"></i> Cargando...</div>';
+
+      image.onload = function() {
+        image.style.display = 'block';
+        placeholder.style.display = 'none';
+        box.classList.add('has-image');
+        
+        if (boxId === 'box1' || boxId === 'box1_double') {
+          if (cropper1) cropper1.destroy();
+          cropper1 = initCropper(image);
+        } else if (boxId === 'box2_double') {
+          if (cropper2) cropper2.destroy();
+          cropper2 = initCropper(image);
+        }
+      };
+
+      image.onerror = function() {
+        alert("❌ No se pudo cargar la imagen desde la URL. Verifica que sea accesible y pública.");
+        placeholder.innerHTML = `
+          <i class="bi bi-cloud-upload upload-icon"></i>
+          <div class="upload-text">Sube tu imagen para el separador</div>
+          <button class="upload-btn">Seleccionar imagen</button>
+        `;
+        image.src = '';
+        image.style.display = 'none';
+        box.classList.remove('has-image');
+      };
+
+      image.src = imageUrl;
+    }
 
     // --- Recortar ---
     document.getElementById('cropButton').addEventListener('click', function() {
