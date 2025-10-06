@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MarcaLibros Personalizados</title>
 
-  <!-- Favicon desde URL (usando data URI como fallback) -->
+  <!-- Favicon desde URL -->
   <link rel="icon" type="image/png" sizes="32x32" href="https://res.cloudinary.com/dipv76dpn/image/upload/v1759597977/undefined_Quiero_una_mezcla_de_d4pb5v.png">
   <link rel="icon" type="image/png" sizes="16x16" href="https://res.cloudinary.com/dipv76dpn/image/upload/v1759597977/undefined_Quiero_una_mezcla_de_d4pb5v.png">
   <link rel="apple-touch-icon" sizes="180x180" href="https://res.cloudinary.com/dipv76dpn/image/upload/v1759597977/undefined_Quiero_una_mezcla_de_d4pb5v.png">
@@ -398,6 +398,9 @@
     <button id="downloadPdfButton" style="display:none;" class="secondary"><i class="bi bi-file-pdf"></i> PDF (imprimir)</button>
     <button id="downloadPngButton" style="display:none;"><i class="bi bi-image"></i> PNG (alta calidad)</button>
     <button id="downloadJpgButton" style="display:none;"><i class="bi bi-camera"></i> JPG (compartir)</button>
+    <button id="uploadToCloudinaryButton" style="display:none;" class="secondary">
+      <i class="bi bi-cloud-arrow-up"></i> Subir a Cloudinary
+    </button>
   </div>
 
   <div id="previewContainer">
@@ -437,6 +440,7 @@
         const downloadPdfButton = document.getElementById('downloadPdfButton');
         const downloadPngButton = document.getElementById('downloadPngButton');
         const downloadJpgButton = document.getElementById('downloadJpgButton');
+        const uploadToCloudinaryButton = document.getElementById('uploadToCloudinaryButton');
 
         if (currentMode === 'single') {
           singleSection.style.display = 'flex';
@@ -453,6 +457,7 @@
         downloadPdfButton.style.display = 'none';
         downloadPngButton.style.display = 'none';
         downloadJpgButton.style.display = 'none';
+        uploadToCloudinaryButton.style.display = 'none';
 
         if (cropper1) cropper1.destroy();
         if (cropper2) cropper2.destroy();
@@ -471,7 +476,7 @@
     });
 
     // --- Eventos de carga de imagen ---
-    function initCropper(imgElement, cropperVar) {
+    function initCropper(imgElement) {
       return new Cropper(imgElement, {
         aspectRatio: 1 / 3,
         viewMode: 1,
@@ -488,7 +493,6 @@
       });
     }
 
-    // Función para manejar la carga de imágenes
     function setupImageUpload(inputId, imageId, boxId) {
       const input = document.getElementById(inputId);
       const image = document.getElementById(imageId);
@@ -496,30 +500,22 @@
       const placeholder = box.querySelector('.upload-placeholder');
       const uploadBtn = placeholder.querySelector('.upload-btn');
       
-      // Hacer clic en el botón activa el input file
-      uploadBtn.addEventListener('click', function() {
-        input.click();
+      uploadBtn.addEventListener('click', () => input.click());
+      placeholder.addEventListener('click', e => {
+        if (e.target === placeholder) input.click();
       });
       
-      // Hacer clic en toda el área también activa el input file
-      placeholder.addEventListener('click', function(e) {
-        if (e.target === placeholder) {
-          input.click();
-        }
-      });
-      
-      input.addEventListener('change', function(e) {
+      input.addEventListener('change', e => {
         const file = e.target.files[0];
         if (!file) return;
         
         const reader = new FileReader();
-        reader.onload = function(event) {
+        reader.onload = event => {
           image.src = event.target.result;
           image.style.display = 'block';
           placeholder.style.display = 'none';
           box.classList.add('has-image');
           
-          // Inicializar cropper
           if (boxId === 'box1' || boxId === 'box1_double') {
             if (cropper1) cropper1.destroy();
             cropper1 = initCropper(image);
@@ -532,7 +528,6 @@
       });
     }
 
-    // Configurar eventos para todas las áreas de carga
     setupImageUpload('imageUpload1', 'image1', 'box1');
     setupImageUpload('imageUpload1_double', 'image1_double', 'box1_double');
     setupImageUpload('imageUpload2_double', 'image2_double', 'box2_double');
@@ -546,7 +541,6 @@
         }
         croppedCanvas1 = cropper1.getCroppedCanvas({ width: 500, height: 1500 });
         showResult(croppedCanvas1);
-
       } else {
         if (!cropper1 || !cropper2) {
           alert("Por favor, sube y recorta ambas imágenes.");
@@ -573,6 +567,7 @@
       document.getElementById('downloadPdfButton').style.display = 'inline-block';
       document.getElementById('downloadPngButton').style.display = 'inline-block';
       document.getElementById('downloadJpgButton').style.display = 'inline-block';
+      document.getElementById('uploadToCloudinaryButton').style.display = 'inline-block';
       document.getElementById('instructions').style.display = 'block';
 
       const instructionText = document.getElementById('instructionText');
@@ -625,6 +620,87 @@
       link.download = currentMode === 'single' ? 'separador-una-cara.jpg' : 'separador-doble-cara.jpg';
       link.href = window.finalCanvas.toDataURL('image/jpeg', 0.95);
       link.click();
+    });
+
+    // --- Subir a Cloudinary ---
+    const CLOUD_NAME = 'dipv76dpn';
+    const UPLOAD_PRESET = 'separadores-preset';
+
+    function uploadToCloudinary(canvas) {
+      const formData = new FormData();
+      canvas.toBlob(blob => {
+        formData.append('file', blob, 'separador.png');
+        formData.append('upload_preset', UPLOAD_PRESET);
+        formData.append('folder', 'Separadores');
+
+        fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.secure_url) {
+            const url = data.secure_url;
+            alert(`✅ ¡Subido con éxito!\n\nURL pública:\n${url}\n\n¡Puedes copiarla y compartirla!`);
+            showUploadSuccess(url);
+          } else {
+            throw new Error('Respuesta inválida de Cloudinary');
+          }
+        })
+        .catch(error => {
+          console.error('Error al subir:', error);
+          alert('❌ Error al subir a Cloudinary. Revisa la consola.');
+        });
+      }, 'image/png');
+    }
+
+    function showUploadSuccess(url) {
+      const instructionText = document.getElementById('instructionText');
+      instructionText.innerHTML += `
+        <br><hr><br>
+        <strong>🔗 URL pública del separador:</strong><br>
+        <input type="text" value="${url}" readonly style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px;">
+        <button onclick="copyToClipboard('${url}')" style="margin-top: 5px; padding: 5px 10px; font-size: 14px; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer;">Copiar URL</button>
+      `;
+    }
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert('✅ URL copiada al portapapeles');
+        }).catch(() => {
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        const successful = document.execCommand('copy');
+        const msg = successful ? 'copiado' : 'no copiado';
+        alert(successful ? '✅ URL copiada al portapapeles' : '❌ No se pudo copiar');
+      } catch (err) {
+        alert('❌ No se pudo copiar. Por favor, seleccione y copie manualmente.');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    document.getElementById('uploadToCloudinaryButton').addEventListener('click', function() {
+      if (window.finalCanvas) {
+        uploadToCloudinary(window.finalCanvas);
+      } else {
+        alert('No hay un separador generado para subir.');
+      }
     });
   </script>
 </body>
