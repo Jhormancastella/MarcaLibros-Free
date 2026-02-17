@@ -7,8 +7,12 @@
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 ## web 
-https://jhormancastella.github.io/MarcaLibros-Free/
+<div align="center">
 
+Explóralo y dime qué te parece.
+
+[![Ver MarcaLibros en Vivo](https://img.shields.io/badge/📚_Ver_MarcaLibros_En_Vivo-Click_Aquí-2EA043?style=for-the-badge&logo=google-chrome&logoColor=white)](https://jhormancastella.github.io/MarcaLibros-Free/)
+</div>
 ## 🌟 Descripción General
 
 **MarcaLibros Personalizados** es una aplicación web interactiva que permite a los usuarios crear separadores de libros personalizados de forma rápida y sencilla. Los usuarios pueden cargar sus propias imágenes, recortarlas según sus preferencias y descargar el resultado en múltiples formatos listos para imprimir.
