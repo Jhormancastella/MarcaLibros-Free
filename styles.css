@@ -14,6 +14,9 @@ body.dark-mode{--bg:#0f1728;--surface:#182137;--surface2:#1e2944;--text:#edf3ff;
 .uploader h3{margin:0 0 8px;font-size:1rem}.box{height:300px;border:2px dashed var(--border);border-radius:10px;background:linear-gradient(140deg,var(--surface),var(--surface2));display:flex;align-items:center;justify-content:center;overflow:hidden}
 .box.has-image{border-style:solid;border-color:var(--success)}.box>img{display:none;width:100%;height:100%;object-fit:contain}.box .cropper-container img{display:block}.ph{text-align:center;color:var(--muted);padding:14px}.ph i{font-size:44px;color:var(--brand);display:block}
 .row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:8px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.perforation-option{display:flex;align-items:flex-start;gap:10px;margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);cursor:pointer}
+.perforation-option input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--brand);flex:0 0 auto}
+.perforation-option span{display:grid;gap:2px}.perforation-option small{color:var(--muted)}
 .btn{border:1px solid transparent;border-radius:10px;padding:10px 12px;font:inherit;font-weight:700;cursor:pointer;background:var(--brand);color:#fff;min-height:44px}.btn:hover{background:var(--brand2)}
 .btn.secondary{background:var(--surface2);color:var(--text);border-color:var(--border)}input[type=text]{width:100%;border:1px solid var(--border);border-radius:10px;padding:10px;background:var(--surface);color:var(--text);min-height:44px}
 .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.status{min-height:22px;margin-top:10px;color:var(--muted)}

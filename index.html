@@ -13,13 +13,15 @@
   <meta property="og:title" content="MarcaLibros Personalizados para Imprimir | Creador Gratis">
   <meta property="og:description" content="Disena marcalibros de una o doble cara y descargalos listos para impresion.">
   <meta property="og:url" content="https://jhormancastella.github.io/MarcaLibros-Free/">
-  <meta property="og:image" content="https://res.cloudinary.com/dipv76dpn/image/upload/v1759597977/undefined_Quiero_una_mezcla_de_d4pb5v.png">
+  <meta property="og:image" content="https://jhormancastella.github.io/MarcaLibros-Free/512.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="MarcaLibros Personalizados para Imprimir">
   <meta name="twitter:description" content="Creador online de separadores de libros personalizados.">
-  <meta name="twitter:image" content="https://res.cloudinary.com/dipv76dpn/image/upload/v1759597977/undefined_Quiero_una_mezcla_de_d4pb5v.png">
+  <meta name="twitter:image" content="https://jhormancastella.github.io/MarcaLibros-Free/512.png">
   <meta name="theme-color" content="#1f5eff">
-  <link rel="icon" type="image/png" sizes="32x32" href="https://res.cloudinary.com/dipv76dpn/image/upload/v1759597977/undefined_Quiero_una_mezcla_de_d4pb5v.png">
+  <link rel="icon" type="image/png" href="https://res.cloudinary.com/dipv76dpn/image/upload/v1759597977/undefined_Quiero_una_mezcla_de_d4pb5v.png">
+  <link rel="apple-touch-icon" href="./192.png">
+  <link rel="manifest" href="./manifest.webmanifest">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
@@ -33,7 +35,7 @@
     <header class="hero card">
       <div class="hero-top">
         <div class="brand">
-          <img class="logo" src="https://res.cloudinary.com/dipv76dpn/image/upload/v1759597977/undefined_Quiero_una_mezcla_de_d4pb5v.png" alt="Logo MarcaLibros" width="70" height="70">
+          <img class="logo" src="./512.png" alt="Logo MarcaLibros" width="70" height="70">
           <div>
             <h1>MarcaLibros Personalizados para Imprimir</h1>
             <p>Crea marcalibros de 5 x 15 cm (una cara) o 10 x 15 cm (doble cara) listos para imprimir.</p>
@@ -68,6 +70,13 @@
             <div class="row"><input type="text" id="url2" inputmode="url" placeholder="https://ejemplo.com/imagen.jpg"><button class="btn secondary" id="load2" type="button">Cargar URL</button></div>
           </article>
         </div>
+        <label class="perforation-option" for="perforationToggle">
+          <input type="checkbox" id="perforationToggle">
+          <span>
+            <strong>Agregar perforación superior</strong>
+            <small>Agujero de 5 mm, centrado en la parte superior.</small>
+          </span>
+        </label>
         <div class="controls">
           <button class="btn" id="cropBtn" type="button"><i class="bi bi-scissors"></i> Generar</button>
           <button class="btn secondary" id="pdfBtn" type="button" hidden>PDF</button>
@@ -99,5 +108,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js" defer></script>
   <script src="app.js" defer></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js")
+          .catch(error => console.error("No se pudo registrar el service worker:", error));
+      });
+    }
+  </script>
 </body>
 </html>

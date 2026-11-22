@@ -1,0 +1,26 @@
+{
+  "id": "./",
+  "name": "MarcaLibros Personalizados",
+  "short_name": "MarcaLibros",
+  "description": "Crea marcalibros personalizados listos para imprimir.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7fafc",
+  "theme_color": "#1f5eff",
+  "icons": [
+    {
+      "src": "./192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
